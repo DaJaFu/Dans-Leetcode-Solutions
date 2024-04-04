@@ -9,4 +9,11 @@ def romanToInt(s: str) -> int:
             else:
                 num += d.get(s[i])
         return num
-print(romanToInt('VII'))
+
+print('-'*20)
+print(romanToInt('III')) 
+print('-'*20)
+print(romanToInt('LVIII'))
+print('-'*20)
+print(romanToInt('MCMXCIV'))
+print('-'*20)
