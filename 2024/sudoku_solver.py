@@ -39,32 +39,37 @@ board = [["5","3",".",".","7",".",".",".","."],
          [".",".",".","4","1","9",".",".","5"],
          [".",".",".",".","8",".",".","7","9"]]
 
+def possible(board, row, col, num):
+    if board[row][col] != '.':
+        return False
+    if str(num) in board[row]:
+        return False
+    for i in range(9):
+        if board[i][col] == str(num):
+            return False
+    block_row,block_col = 3*(row//3),3*(col//3)
+    for x in range(block_row,block_row+3):
+        for z in range(block_col,block_col+3):
+            if board[x][z] == str(num):
+                return False
+    return True
 
-def get_block(row:int,col:int)->List[str]:
-    x, y = 3*(row//3),3*(col//3)
-    block = []
-    for i in range(x, y + 3):
-        block.extend(board[i][y:y+3])
+def checkSolved(board: List[list]) -> bool:
+    def get_block(row:int,col:int)->list:
+        x, y = 3*(row//3),3*(col//3)
+        block = []
+        for i in range(x, y + 3):
+            block.extend(board[i][y:y+3])
         return block
-
-def solveSudoku(board: List[List[str]]) -> None:
-        for i in range(len(board)):
-            row = board[i]
-            for j in range(len(board[i])): 
-                poss = range(1,10)
-                element = board[i][j]
-                column = [x[j] for x in board]
-                block = get_block(i,j)
-
-
-def checkSolved(board: List[List[str]]) -> bool:
-    def checkSection(section:List[str])-> bool:
+    
+    def checkSection(section:list)->bool:
         seen = set()
         for cell in section:
-            if cell != '.':
+            if cell != '.' and type(cell) == str:
                 if cell in seen:
                     return False
                 seen.add(cell)
+            else: pass
         return True
         
     for i in range(9):
@@ -80,6 +85,23 @@ def checkSolved(board: List[List[str]]) -> bool:
                 return False
     return True
 
+def solveSudoku(board: List[List[str]]) -> None:
+        for row in range(9):
+            for col in range(9):
+                if board[row][col] == '.':
+                    lst = []
+                    for num in range(1,10):
+                        if possible(board,row,col,num):
+                            lst.append(str(num))
+                    if len(lst)>1:
+                        board[row][col]=lst
+                    else: 
+                        board[row][col]=lst[0]
+        if not checkSolved(board):
+            solveSudoku(board)
+            
+                    
 if __name__ == '__main__':
     solveSudoku(board)
-    print(f'\n Solved={checkSolved(board)}')
+    print(board)
+    #print(f'\n Solved={checkSolved(board)}')
